@@ -1,0 +1,18 @@
+body {
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.board-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  width: 550px;
+  height: 550px;
+}
+
+.cell {
+  grid-template-columns: repeat(3, 1fr);
+  border: 1px solid black;
+}
