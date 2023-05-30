@@ -19,5 +19,15 @@ const gameBoard = (() => {
     });
   };
 
-  return { getBoard, boardRender };
+  const updateBoard = (i, value) => {
+    if (board[i] !== "") {
+      return false;
+    } else {
+      board[i] = value;
+      console.log(board[i]);
+      return true;
+    }
+  };
+
+  return { getBoard, boardRender, updateBoard };
 })();
