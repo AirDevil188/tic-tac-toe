@@ -31,3 +31,6 @@ const gameBoard = (() => {
 
   return { getBoard, boardRender, updateBoard };
 })();
+
+const playerOne = Player("Player 1", "X", true);
+const playerTwo = Player("Player 2", "O", false);
