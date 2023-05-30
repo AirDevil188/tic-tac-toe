@@ -14,9 +14,18 @@ const gameBoard = (() => {
 
   const boardRender = () => {
     cell.forEach(function (item, index) {
-      item.addEventListener("click", function () {});
       item.textContent = `${board[index]}`;
     });
+  };
+
+  const showOnBoard = () => {
+    for (let i = 0; i < cell.length; i++) {
+      cell[i].addEventListener("click", function () {
+        cell[i].textContent = updateBoard(i, displayController.switchTurn());
+        gameBoard.boardRender();
+      });
+    }
+    return boardRender();
   };
 
   const updateBoard = (i, value) => {
@@ -29,7 +38,7 @@ const gameBoard = (() => {
     }
   };
 
-  return { getBoard, boardRender, updateBoard };
+  return { getBoard, boardRender, updateBoard, showOnBoard };
 })();
 
 const displayController = (() => {
@@ -52,3 +61,5 @@ const displayController = (() => {
 
 const playerOne = Player("Player 1", "X", true);
 const playerTwo = Player("Player 2", "O", false);
+
+gameBoard.showOnBoard();
