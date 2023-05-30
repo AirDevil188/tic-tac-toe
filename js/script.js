@@ -32,7 +32,23 @@ const gameBoard = (() => {
   return { getBoard, boardRender, updateBoard };
 })();
 
-const displayController = (() => {})();
+const displayController = (() => {
+  let activeMarker = "";
+  const switchTurn = () => {
+    if (playerOne.isActive === true) {
+      activeMarker = playerOne.getMarker();
+      playerOne.isActive = false;
+      playerTwo.isActive = true;
+    } else {
+      playerTwo.isActive = true;
+      activeMarker = playerTwo.getMarker();
+      playerTwo.isActive = false;
+      playerOne.isActive = true;
+    }
+    return activeMarker;
+  };
+  return { switchTurn };
+})();
 
 const playerOne = Player("Player 1", "X", true);
 const playerTwo = Player("Player 2", "O", false);
