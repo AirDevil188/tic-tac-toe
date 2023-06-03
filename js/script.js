@@ -14,6 +14,7 @@ const gameBoard = (() => {
   const boardRender = () => {
     cell.forEach(function (item, i) {
       item.textContent = `${board[i]}`;
+      displayController.displayTextTurn();
     });
   };
 
@@ -51,8 +52,6 @@ const gameBoard = (() => {
   const checkWinner = () => {
     for (let i = 0; i < winningCombinations.length; i++) {
       let winMarkerCombination = board[winningCombinations[i][0]] + board[winningCombinations[i][1]] + board[winningCombinations[i][2]];
-      console.log("win marker combination");
-      console.log(winMarkerCombination);
       if (winMarkerCombination === "XXX") {
         alert(`${playerOne.getName()} has won!`);
       } else if (winMarkerCombination === "OOO") {
@@ -61,28 +60,48 @@ const gameBoard = (() => {
     }
   };
 
-  return { getBoard, boardRender, updateBoard, showOnBoard, checkWinner };
+  return { getBoard, boardRender, updateBoard, showOnBoard };
 })();
 
 const displayController = (() => {
   let activeMarker = "";
   const switchTurn = () => {
-    if (playerOne.isActive === true) {
-      activeMarker = playerOne.getMarker();
-      playerOne.isActive = false;
-      playerTwo.isActive = true;
-    } else {
-      playerTwo.isActive = true;
-      activeMarker = playerTwo.getMarker();
-      playerTwo.isActive = false;
-      playerOne.isActive = true;
+    switch (activeMarker) {
+      case "":
+        activeMarker = "X";
+        toggleActivePlayers();
+        break;
+      case "X":
+        activeMarker = "O";
+        toggleActivePlayers();
+        break;
+      case "O":
+        activeMarker = "X";
+        toggleActivePlayers();
+        break;
     }
     return activeMarker;
   };
-  return { switchTurn };
+
+  const toggleActivePlayers = () => {
+    playerOne.isActive = !playerOne.isActive;
+    playerTwo.isActive = !playerTwo.isActive;
+  };
+
+  const createPlayer = () => {};
+
+  const displayTextTurn = () => {
+    const playerTurnPara = document.querySelector(".para-text-turn");
+    if (playerOne.isActive === true) {
+      playerTurnPara.textContent = `It's ${playerOne.getName()} turn.`;
+    } else {
+      playerTurnPara.textContent = `It's ${playerTwo.getName()} turn.`;
+    }
+  };
+  return { switchTurn, displayTextTurn };
 })();
 
-const playerOne = Player("Player 1", "X", true);
-const playerTwo = Player("Player 2", "O", false);
+const playerOne = Player("Jack", "X", true);
+const playerTwo = Player("Mark", "O", false);
 
 gameBoard.showOnBoard();
