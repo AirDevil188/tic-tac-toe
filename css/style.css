@@ -8,11 +8,15 @@ body {
 .board-container {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  width: 550px;
-  height: 550px;
 }
 
 .cell {
+  width: 200px;
+  height: 200px;
   grid-template-columns: repeat(3, 1fr);
   border: 1px solid black;
+}
+
+.disabled {
+  pointer-events: none;
 }

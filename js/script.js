@@ -5,11 +5,9 @@ const Player = (name, marker, isActive) => {
 };
 
 const gameBoard = (() => {
-  const board = ["", "", "", "", "", "", "", "", ""];
+  let board = ["", "", "", "", "", "", "", "", ""];
   const cell = document.querySelectorAll(".cell");
-  const getBoard = () => {
-    return board;
-  };
+  const getBoard = () => board;
 
   const boardRender = () => {
     cell.forEach(function (item, i) {
@@ -21,9 +19,10 @@ const gameBoard = (() => {
   const showOnBoard = () => {
     for (let i = 0; i < cell.length; i++) {
       cell[i].addEventListener("click", function () {
-        cell[i].textContent = updateBoard(i, displayController.switchTurn());
+        cell[i].textContent = updateBoard(i, gameController.switchTurn());
+        cell[i].classList.add("disabled");
         boardRender();
-        checkWinner();
+        gameController.checkGameStatus();
       });
     }
     return boardRender();
@@ -38,33 +37,40 @@ const gameBoard = (() => {
     }
   };
 
-  let winningCombinations = [
-    [0, 1, 2],
-    [0, 4, 8],
-    [0, 3, 6],
-    [2, 4, 6],
-    [3, 4, 5],
-    [6, 7, 8],
-    [2, 5, 8],
-    [1, 4, 7],
-  ];
+  return { showOnBoard, getBoard };
+})();
 
-  const checkWinner = () => {
-    for (let i = 0; i < winningCombinations.length; i++) {
-      let winMarkerCombination = board[winningCombinations[i][0]] + board[winningCombinations[i][1]] + board[winningCombinations[i][2]];
-      if (winMarkerCombination === "XXX") {
-        alert(`${playerOne.getName()} has won!`);
-      } else if (winMarkerCombination === "OOO") {
-        alert(`${playerTwo.getName()} has won!`);
-      }
+const displayController = () => {
+  const gameStatusText = document.querySelector(".game-status-text");
+  const boardContainer = document.querySelector(".board-container");
+
+  const updateScreen = () => {
+    if (playerOne.isActive === true && playerTwo.isActive === false) {
+      gameStatusText.textContent = `${playerTwo.getName()} has won!`;
+      boardContainer.classList.add("disabled");
+    } else {
+      gameStatusText.textContent = `${playerOne.getName()} has won!`;
+      boardContainer.classList.add("disabled");
     }
   };
 
-  return { getBoard, boardRender, updateBoard, showOnBoard };
-})();
+  const updateTieGame = () => {
+    return (gameStatusText.textContent = "It's a Tie Game");
+  };
 
-const displayController = (() => {
+  const displayTextTurn = () => {
+    if (playerOne.isActive === true) {
+      gameStatusText.textContent = `It's ${playerOne.getName()} turn.`;
+    } else {
+      gameStatusText.textContent = `It's ${playerTwo.getName()} turn.`;
+    }
+  };
+  return { updateScreen, displayTextTurn, updateTieGame };
+};
+
+const gameController = (() => {
   let activeMarker = "";
+  let moves = 0;
   const switchTurn = () => {
     switch (activeMarker) {
       case "":
@@ -88,17 +94,34 @@ const displayController = (() => {
     playerTwo.isActive = !playerTwo.isActive;
   };
 
-  const createPlayer = () => {};
+  let winningCombinations = [
+    [0, 1, 2],
+    [0, 4, 8],
+    [0, 3, 6],
+    [2, 4, 6],
+    [3, 4, 5],
+    [6, 7, 8],
+    [2, 5, 8],
+    [1, 4, 7],
+  ];
 
-  const displayTextTurn = () => {
-    const playerTurnPara = document.querySelector(".para-text-turn");
-    if (playerOne.isActive === true) {
-      playerTurnPara.textContent = `It's ${playerOne.getName()} turn.`;
-    } else {
-      playerTurnPara.textContent = `It's ${playerTwo.getName()} turn.`;
+  const checkGameStatus = () => {
+    moves++;
+    for (let i = 0; i < winningCombinations.length; i++) {
+      let winMarkerCombination = gameBoard.getBoard()[winningCombinations[i][0]] + gameBoard.getBoard()[winningCombinations[i][1]] + gameBoard.getBoard()[winningCombinations[i][2]];
+      if (winMarkerCombination !== "XXX" && winMarkerCombination !== "OOO" && moves === 9) {
+        displayController.updateTieGame();
+      } else if (winMarkerCombination === "XXX") {
+        displayController.updateScreen();
+        break;
+      } else if (winMarkerCombination === "OOO") {
+        displayController.updateScreen();
+        break;
+      }
     }
   };
-  return { switchTurn, displayTextTurn };
+
+  return { switchTurn, checkGameStatus };
 })();
 
 const playerOne = Player("Jack", "X", true);
