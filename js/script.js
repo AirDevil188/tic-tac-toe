@@ -40,7 +40,7 @@ const gameBoard = (() => {
   return { showOnBoard, getBoard };
 })();
 
-const displayController = () => {
+const displayController = (() => {
   const gameStatusText = document.querySelector(".game-status-text");
   const boardContainer = document.querySelector(".board-container");
 
@@ -65,12 +65,24 @@ const displayController = () => {
       gameStatusText.textContent = `It's ${playerTwo.getName()} turn.`;
     }
   };
+
   return { updateScreen, displayTextTurn, updateTieGame };
-};
+})();
 
 const gameController = (() => {
   let activeMarker = "";
   let moves = 0;
+  const inputPlayerOneName = document.querySelector("#first-player-name");
+  const inputPlayerTwoName = document.querySelector("#second-player-name");
+  const submitPlayerButton = document.querySelector(".submit");
+
+  const createPlayer = () => {
+    playerOne = Player(`${inputPlayerOneName.value}`, "X", true);
+    playerTwo = Player(`${inputPlayerTwoName.value}`, "O", false);
+
+    return playerOne, playerTwo;
+  };
+
   const switchTurn = () => {
     switch (activeMarker) {
       case "":
@@ -121,10 +133,10 @@ const gameController = (() => {
     }
   };
 
-  return { switchTurn, checkGameStatus };
+  return { switchTurn, checkGameStatus, createPlayer, submitPlayerButton };
 })();
 
-const playerOne = Player("Jack", "X", true);
-const playerTwo = Player("Mark", "O", false);
-
-gameBoard.showOnBoard();
+gameController.submitPlayerButton.addEventListener("click", () => {
+  gameController.createPlayer();
+  gameBoard.showOnBoard();
+});
