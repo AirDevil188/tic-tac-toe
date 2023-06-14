@@ -6,8 +6,8 @@ body {
 }
 
 .board-container {
-  display: grid;
   grid-template-columns: repeat(3, 1fr);
+  display: none;
 }
 
 .cell {
@@ -19,4 +19,8 @@ body {
 
 .disabled {
   pointer-events: none;
+}
+
+.reset-button-game {
+  display: none;
 }

@@ -25,7 +25,16 @@ const gameBoard = (() => {
         gameController.checkGameStatus();
       });
     }
-    return boardRender();
+    boardRender();
+  };
+
+  const resetBoard = () => {
+    board = ["", "", "", "", "", "", "", "", ""];
+    displayController.boardContainer.classList.remove("disabled");
+    for (let i = 0; i < cell.length; i++) {
+      cell[i].classList.remove("disabled");
+      boardRender();
+    }
   };
 
   const updateBoard = (i, value) => {
@@ -37,25 +46,35 @@ const gameBoard = (() => {
     }
   };
 
-  return { showOnBoard, getBoard };
+  return { showOnBoard, getBoard, resetBoard };
 })();
 
 const displayController = (() => {
   const gameStatusText = document.querySelector(".game-status-text");
   const boardContainer = document.querySelector(".board-container");
+  const newPlayerInputsContainer = document.querySelector(".player-container");
+  const inputPlayerOneName = document.querySelector("#first-player-name");
+  const inputPlayerTwoName = document.querySelector("#second-player-name");
+  const submitPlayerButton = document.querySelector(".submit");
+  const resetGameButton = document.querySelector(".reset-button-game");
+
+  const createPlayer = () => {
+    playerOne = Player(`${inputPlayerOneName.value}`, "X", true);
+    playerTwo = Player(`${inputPlayerTwoName.value}`, "O", false);
+
+    return playerOne, playerTwo;
+  };
 
   const updateScreen = () => {
     if (playerOne.isActive === true && playerTwo.isActive === false) {
       gameStatusText.textContent = `${playerTwo.getName()} has won!`;
+      showResetGameButton();
       boardContainer.classList.add("disabled");
     } else {
       gameStatusText.textContent = `${playerOne.getName()} has won!`;
+      showResetGameButton();
       boardContainer.classList.add("disabled");
     }
-  };
-
-  const updateTieGame = () => {
-    return (gameStatusText.textContent = "It's a Tie Game");
   };
 
   const displayTextTurn = () => {
@@ -66,22 +85,39 @@ const displayController = (() => {
     }
   };
 
-  return { updateScreen, displayTextTurn, updateTieGame };
+  const updateTieGame = () => {
+    showResetGameButton();
+    return (gameStatusText.textContent = "It's a Tie Game");
+  };
+
+  const showResetGameButton = () => {
+    resetGameButton.style.display = "block";
+  };
+
+  const toggleGameBoard = () => {
+    boardContainer.style.display = "grid";
+    newPlayerInputsContainer.style.display = "none";
+  };
+
+  submitPlayerButton.addEventListener("click", () => {
+    toggleGameBoard();
+    createPlayer();
+    gameBoard.showOnBoard();
+  });
+
+  resetGameButton.addEventListener("click", () => {
+    gameController.resetGame();
+  });
+
+  return { updateScreen, displayTextTurn, updateTieGame, boardContainer };
 })();
 
 const gameController = (() => {
+  let playerOneWin = 0;
+  let playerTwoWin = 0;
+  let tieGame = 0;
   let activeMarker = "";
   let moves = 0;
-  const inputPlayerOneName = document.querySelector("#first-player-name");
-  const inputPlayerTwoName = document.querySelector("#second-player-name");
-  const submitPlayerButton = document.querySelector(".submit");
-
-  const createPlayer = () => {
-    playerOne = Player(`${inputPlayerOneName.value}`, "X", true);
-    playerTwo = Player(`${inputPlayerTwoName.value}`, "O", false);
-
-    return playerOne, playerTwo;
-  };
 
   const switchTurn = () => {
     switch (activeMarker) {
@@ -106,6 +142,13 @@ const gameController = (() => {
     playerTwo.isActive = !playerTwo.isActive;
   };
 
+  const resetGame = () => {
+    playerOne.isActive = true;
+    playerTwo.isActive = false;
+    activeMarker = "";
+    gameBoard.resetBoard();
+  };
+
   let winningCombinations = [
     [0, 1, 2],
     [0, 4, 8],
@@ -123,20 +166,23 @@ const gameController = (() => {
       let winMarkerCombination = gameBoard.getBoard()[winningCombinations[i][0]] + gameBoard.getBoard()[winningCombinations[i][1]] + gameBoard.getBoard()[winningCombinations[i][2]];
       if (winMarkerCombination !== "XXX" && winMarkerCombination !== "OOO" && moves === 9) {
         displayController.updateTieGame();
+        moves = 0;
+        tieGame++;
+        console.log(tieGame);
       } else if (winMarkerCombination === "XXX") {
         displayController.updateScreen();
+        playerOneWin++;
+        console.log(playerOneWin);
+        moves = 0;
         break;
       } else if (winMarkerCombination === "OOO") {
         displayController.updateScreen();
+        playerTwoWin++;
+        console.log(playerTwoWin);
+        moves = 0;
         break;
       }
     }
   };
-
-  return { switchTurn, checkGameStatus, createPlayer, submitPlayerButton };
+  return { switchTurn, checkGameStatus, resetGame };
 })();
-
-gameController.submitPlayerButton.addEventListener("click", () => {
-  gameController.createPlayer();
-  gameBoard.showOnBoard();
-});
