@@ -21,6 +21,10 @@ body {
   pointer-events: none;
 }
 
-.reset-button-game {
+.new-round-button {
+  display: none;
+}
+
+.play-again-button {
   display: none;
 }

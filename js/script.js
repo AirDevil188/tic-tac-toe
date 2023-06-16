@@ -30,7 +30,6 @@ const gameBoard = (() => {
 
   const resetBoard = () => {
     board = ["", "", "", "", "", "", "", "", ""];
-    displayController.boardContainer.classList.remove("disabled");
     for (let i = 0; i < cell.length; i++) {
       cell[i].classList.remove("disabled");
       boardRender();
@@ -56,7 +55,8 @@ const displayController = (() => {
   const inputPlayerOneName = document.querySelector("#first-player-name");
   const inputPlayerTwoName = document.querySelector("#second-player-name");
   const submitPlayerButton = document.querySelector(".submit");
-  const resetGameButton = document.querySelector(".reset-button-game");
+  const newRoundButton = document.querySelector(".new-round-button");
+  const playAgainButton = document.querySelector(".play-again-button");
 
   const createPlayer = () => {
     playerOne = Player(`${inputPlayerOneName.value}`, "X", true);
@@ -67,12 +67,12 @@ const displayController = (() => {
 
   const updateScreen = () => {
     if (playerOne.isActive === true && playerTwo.isActive === false) {
-      gameStatusText.textContent = `${playerTwo.getName()} has won!`;
-      showResetGameButton();
+      gameStatusText.textContent = `${playerTwo.getName()} has won the round!`;
+      showNewRoundButton();
       boardContainer.classList.add("disabled");
     } else {
-      gameStatusText.textContent = `${playerOne.getName()} has won!`;
-      showResetGameButton();
+      gameStatusText.textContent = `${playerOne.getName()} has won the round!`;
+      showNewRoundButton();
       boardContainer.classList.add("disabled");
     }
   };
@@ -86,12 +86,20 @@ const displayController = (() => {
   };
 
   const updateTieGame = () => {
-    showResetGameButton();
+    showNewRoundButton();
     return (gameStatusText.textContent = "It's a Tie Game");
   };
 
-  const showResetGameButton = () => {
-    resetGameButton.style.display = "block";
+  const showNewRoundButton = () => {
+    newRoundButton.style.display = "block";
+  };
+
+  const hideNewRoundButton = () => {
+    newRoundButton.style.display = "none";
+  };
+
+  const showPlayAgainButton = () => {
+    displayController.playAgainButton.style.display = "block";
   };
 
   const toggleGameBoard = () => {
@@ -102,20 +110,26 @@ const displayController = (() => {
   submitPlayerButton.addEventListener("click", () => {
     toggleGameBoard();
     createPlayer();
+    gameController.updatePlayerScores();
     gameBoard.showOnBoard();
   });
 
-  resetGameButton.addEventListener("click", () => {
+  newRoundButton.addEventListener("click", () => {
+    boardContainer.classList.remove("disabled");
     gameController.resetGame();
+    hideNewRoundButton();
   });
 
-  return { updateScreen, displayTextTurn, updateTieGame, boardContainer };
+  playAgainButton.addEventListener("click", () => {
+    location.reload();
+  });
+
+  return { updateScreen, displayTextTurn, updateTieGame, hideNewRoundButton, showPlayAgainButton, playAgainButton };
 })();
 
 const gameController = (() => {
-  let playerOneWin = 0;
-  let playerTwoWin = 0;
-  let tieGame = 0;
+  let playerOneWinScore = 0;
+  let playerTwoWinScore = 0;
   let activeMarker = "";
   let moves = 0;
 
@@ -167,22 +181,44 @@ const gameController = (() => {
       if (winMarkerCombination !== "XXX" && winMarkerCombination !== "OOO" && moves === 9) {
         displayController.updateTieGame();
         moves = 0;
-        tieGame++;
-        console.log(tieGame);
       } else if (winMarkerCombination === "XXX") {
         displayController.updateScreen();
-        playerOneWin++;
-        console.log(playerOneWin);
+        playerOneWinScore++;
+        updatePlayerScores();
+        gameOver();
         moves = 0;
         break;
       } else if (winMarkerCombination === "OOO") {
         displayController.updateScreen();
-        playerTwoWin++;
-        console.log(playerTwoWin);
+        playerTwoWinScore++;
+        updatePlayerScores();
+        gameOver();
         moves = 0;
         break;
       }
     }
   };
-  return { switchTurn, checkGameStatus, resetGame };
+
+  const updatePlayerScores = () => {
+    const playerOneScore = document.querySelector(".player-one-score");
+    const playerTwoScore = document.querySelector(".player-two-score");
+
+    playerOneScore.textContent = `${playerOne.getName()}: ${playerOneWinScore}`;
+    playerTwoScore.textContent = `${playerTwo.getName()}: ${playerTwoWinScore}`;
+  };
+
+  const gameOver = () => {
+    const gameStatusText = document.querySelector(".game-status-text");
+    if (playerOneWinScore === 3) {
+      gameStatusText.textContent = `${playerOne.getName()} has won the game!`;
+      displayController.hideNewRoundButton();
+      displayController.showPlayAgainButton();
+    } else if (playerTwoWinScore === 3) {
+      gameStatusText.textContent = `${playerTwo.getName()} has won the game!`;
+      displayController.hideNewRoundButton();
+      displayController.showPlayAgainButton();
+    }
+  };
+
+  return { switchTurn, checkGameStatus, resetGame, updatePlayerScores };
 })();
