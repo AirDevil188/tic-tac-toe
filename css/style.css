@@ -1,20 +1,195 @@
+/* root pseudo class */
+:root {
+  --font-color: #66ff66;
+  --background-color: #282828;
+  --main-color: ;
+}
+/* general selectos */
+html {
+  box-sizing: border-box;
+  font-family: "Apple II Screen Typeface", sans-serif;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+  margin: 0;
+  padding: 0;
+}
+
 body {
-  display: flex;
-  flex-flow: column;
+  background-color: var(--background-color);
+  color: var(--font-color);
+  animation: flash 1.5s;
+}
+
+.main-container {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr 5fr 2fr;
   justify-content: center;
+  justify-items: center;
+}
+.title {
+  font-size: 3rem;
+  padding: 0.5rem;
+}
+
+.para-game {
+  font-size: 1.5rem;
+  text-align: center;
+  line-height: 1;
+}
+
+.para-game::after {
+  content: ">: Let's Play!";
+  text-transform: uppercase;
+  display: block;
+  padding: 2.5rem;
+  overflow: hidden;
+  white-space: nowrap;
+  margin: 0 auto;
+  letter-spacing: 0.15em;
+  animation: typing 5s steps(45);
+}
+
+.player-container p {
+  display: flex;
+  flex-flow: column wrap;
+}
+
+.player-container {
+  max-width: 1000px;
+  grid-area: 2/1 / span 3/ 1;
+  display: flex;
+  flex-flow: column wrap;
   align-items: center;
 }
 
-.board-container {
-  grid-template-columns: repeat(3, 1fr);
+.game-container {
+  display: none;
+  flex-flow: column wrap;
+  grid-area: 2/1 / span 3/ 1;
+  gap: 2rem;
+}
+
+form {
+  padding: 1rem;
+  border: 1px dashed #66ff66;
+  text-align: center;
+}
+
+input,
+label {
+  display: block;
+  text-align: center;
+}
+
+input {
+  width: 220px;
+  height: 25px;
+  border: 2px solid var(--font-color);
+  font-family: "Apple II Screen Typeface", sans-serif;
+  background: none;
+  border-radius: 10px;
+  color: var(--font-color);
+  margin-top: 0.5rem;
+  font-size: 1rem;
+}
+
+label {
+  text-align: center;
+  text-transform: uppercase;
+  padding: 2rem;
+}
+
+.button-container {
+  padding: 1rem;
+}
+
+.player-scores-container {
+  display: flex;
+  flex-flow: column wrap;
+  align-items: center;
+  font-size: 1rem;
+}
+
+.player-scores-heading {
   display: none;
 }
 
-.cell {
-  width: 200px;
-  height: 200px;
+button {
+  cursor: pointer;
+  font-family: "Apple II Screen Typeface", sans-serif;
+  font-size: 1.2rem;
+  padding: 1rem;
+  width: 150px;
+  border: none;
+  border-radius: 15px;
+  background-color: var(--font-color);
+  color: #282828;
+}
+
+.submit-button:hover,
+.new-round-button:hover,
+.play-again-button:hover {
+  background-color: #03fd03;
+}
+
+.board-container {
+  cursor: pointer;
+  display: none;
   grid-template-columns: repeat(3, 1fr);
-  border: 1px solid black;
+  width: 300px;
+  height: 300px;
+}
+
+.cell {
+  width: 100px;
+  height: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px dashed var(--font-color);
+  font-size: 7rem;
+}
+
+.cell-x:hover:before {
+  content: "X";
+  color: #66ff6654;
+}
+
+.cell-o:hover:before {
+  content: "O";
+  color: #66ff6654;
+}
+
+.cell:nth-child(3n + 1) {
+  border-left: none;
+}
+
+.cell:nth-child(3n + 3) {
+  border-right: none;
+}
+
+.cell:first-child,
+.cell:nth-child(2),
+.cell:nth-child(3) {
+  border-top: none;
+}
+
+.cell:last-child,
+.cell:nth-child(7),
+.cell:nth-child(8) {
+  border-bottom: none;
+}
+
+.player-turn-container {
+  display: flex;
+  flex-flow: column wrap;
+  align-items: center;
 }
 
 .disabled {
@@ -22,9 +197,123 @@ body {
 }
 
 .new-round-button {
-  display: none;
+  visibility: hidden;
 }
 
 .play-again-button {
   display: none;
+  animation: fadeIn 1s;
+}
+/* animation properties */
+@keyframes flash {
+  100% {
+    opacity: 1;
+  }
+
+  75% {
+    opacity: 0.75;
+  }
+
+  50% {
+    opacity: 0.5;
+  }
+  25% {
+    opacity: 0.25;
+  }
+  0% {
+    opacity: 0;
+  }
+}
+
+@keyframes typing {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* media queries for responsiveness */
+
+@media (min-width: 550px) {
+  .title {
+    font-size: 4.2rem;
+  }
+
+  .para-game {
+    line-height: 1.2;
+    font-size: 1.7rem;
+    padding: 2rem;
+  }
+}
+
+@media (min-width: 800px) {
+  .title {
+    font-size: 4.2rem;
+  }
+
+  .para-game {
+    line-height: 1.3;
+    font-size: 1.7rem;
+    padding: 2rem;
+  }
+
+  .para-game::after {
+    padding: 2rem;
+  }
+
+  form {
+    padding: 2rem;
+    border: 3px dashed #66ff66;
+    text-align: center;
+  }
+
+  input,
+  label {
+    display: block;
+    text-align: center;
+  }
+
+  input {
+    width: 220px;
+    height: 25px;
+    border: 3px solid var(--font-color);
+    font-family: "Apple II Screen Typeface", sans-serif;
+    background: none;
+    border-radius: 10px;
+    color: var(--font-color);
+    margin-top: 0.5rem;
+    font-size: 1rem;
+  }
+
+  label {
+    text-align: center;
+    text-transform: uppercase;
+    padding: 2rem;
+  }
+
+  .board-container {
+    width: 450px;
+    height: 450px;
+  }
+
+  .cell {
+    width: 150px;
+    height: 150px;
+    font-size: 10rem;
+  }
+
+  .player-scores-container {
+    font-size: 1.5rem;
+  }
 }
