@@ -28,7 +28,6 @@ const gameBoard = (() => {
         boardRender();
         gameController.checkGameStatus();
       });
-      hoverBoardEffectMarker();
     }
   };
 
@@ -51,20 +50,7 @@ const gameBoard = (() => {
     }
   };
 
-  /* function to add class to my .cell divs so that we can get hover effect of an active marker on the screen, when we hover over the board. */
-  const hoverBoardEffectMarker = () => {
-    for (let i = 0; i < cell.length; i++) {
-      cell[i].classList.remove("cell-o");
-      if (playerOne.isActive === true) {
-        cell[i].classList.add("cell-x");
-      } else {
-        cell[i].classList.remove("cell-x");
-        cell[i].classList.add("cell-o");
-      }
-    }
-  };
-
-  return { showOnBoard, getBoard, resetBoard, hoverBoardEffectMarker };
+  return { showOnBoard, getBoard, resetBoard };
 })();
 
 /* displayController module */
@@ -137,10 +123,8 @@ const displayController = (() => {
   const displayTextTurn = () => {
     if (playerOne.isActive === true) {
       gameStatusText.textContent = `It's ${playerOne.getName()} turn.`;
-      gameBoard.hoverBoardEffectMarker();
     } else {
       gameStatusText.textContent = `It's ${playerTwo.getName()} turn.`;
-      gameBoard.hoverBoardEffectMarker();
     }
   };
 

@@ -156,16 +156,6 @@ button {
   font-size: 7rem;
 }
 
-.cell-x:hover:before {
-  content: "X";
-  color: #66ff6654;
-}
-
-.cell-o:hover:before {
-  content: "O";
-  color: #66ff6654;
-}
-
 .cell:nth-child(3n + 1) {
   border-left: none;
 }
