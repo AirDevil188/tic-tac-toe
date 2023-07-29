@@ -11,13 +11,21 @@ Also, how to write the logic for the game like switching turns, checking the win
 
 ## Extra's I've added
 
-My first idea was a bit different, instead of just creating a random restuarant page with placeholder content, I wanted to make a full website with content that's going to fit the theme. So I've started thinking how will this website look. Also, I've made it in a way so that It's fully responsive on smaller screens. But at the same time to incorporate Webpack and It's features. Desktop Preview:
+Option to insert names to the players, also in order to win the game you must win three rounds.
+
+## Screenshots
+
+Desktop Preview:
 ![Preview of the project](/resources-and-notes/desktop-preview.png)
+
+
 ![Preview of the project](/resources-and-notes/desktop-preview-2.png)
 
 
 Mobile Preview:
 ![Preview of the project](/resources-and-notes/mobile-preview.jpg)
+
+
 ![Preview of the project](/resources-and-notes/mobile-preview-2.jpg)
 
 ## Demo
@@ -44,6 +52,7 @@ https://airdevil188.github.io/tic-tac-toe/
 - Optimize images further
 - Improve code further. Refactor code  more so that we can show only the functions that we need
 - Add an option so that the player can play against the computer 
+
 ## Feedback
 
 If you have any feedback, please reach out to me: urosculibrk@ymail.com
