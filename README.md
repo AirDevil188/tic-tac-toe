@@ -48,9 +48,7 @@ https://airdevil188.github.io/tic-tac-toe/
 
 ## Things to do
 
-- Implement auto-slide feature to the image carousel
-- Optimize images further
-- Improve code further. Refactor code  more so that we can show only the functions that we need
+- Improve code furtherm, refactor the code  more so that we can show only the functions that we need
 - Add an option so that the player can play against the computer 
 
 ## Feedback
